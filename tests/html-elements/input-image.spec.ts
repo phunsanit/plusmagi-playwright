@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/image
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/image
 
 import { test, expect } from '@playwright/test';
 
@@ -50,4 +50,4 @@ test('Image input must restrict file types via MIME acceptance and simulate prev
 	await page.getByLabel('Profile Picture').selectFile(aspectRatioCheck);
 	// In a real test, this would trigger an assertion against a canvas or preview element's dimensions.
 	await expect(page.locator('#preview-display')).toHaveAttribute('data-ratio', '16:9');
-});"
+});

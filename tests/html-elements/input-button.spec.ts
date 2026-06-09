@@ -1,9 +1,9 @@
-//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/button
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
 import { test, expect } from '@playwright/test';
 
 /**
- * Test Suite for the dedicated HTML input button type (type="button").
- * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/button
+ * Test Suite for the dedicated HTML button element.
+ * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
  */
 test('Button element must function independently of form submission and validate required attributes', async ({ page }) => {
 	await page.goto('https://staging.mock-website.com/form');
@@ -46,4 +46,4 @@ test('Button element must function independently of form submission and validate
 	// Optional Test: Simulate a known failure case to ensure error handling doesn't cause general page failures.
 	// await page.evaluate(() => { /* Malicious JS execution that should be caught by global handlers */ });
 
-});```
+});

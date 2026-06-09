@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/hidden
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/hidden
 
 import { test, expect } from '@playwright/test';
 
@@ -21,7 +21,7 @@ test('Hidden input must preserve state data without user interaction, confirming
 
 	// Test Interaction Isolation: The field should not be visible, and focus attempts should yield no visual change.
 	await page.focus(hiddenSelector); // Should happen silently or fail visually.
-	await expect(page).not.toHaveScreenshot('hidden_input_focused');
+	await expect(page).not.toHaveScreenshot('hidden_input_focused.png');
 
 
 	// --- 3. Common Use Case Validation Tests (Data Integrity) ---
@@ -46,4 +46,4 @@ test('Hidden input must preserve state data without user interaction, confirming
 	// The final check must verify that the token passed in the POST body, which requires network interception.
 	// For this test scope, we confirm successful navigation, implying the data was bundled correctly.
 	await expect(page).toHaveURL(/submission-success/);
-});"
+});

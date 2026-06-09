@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
 
 import { test, expect } from '@playwright/test';
 
@@ -32,7 +32,7 @@ test('Radio input group must enforce mutual exclusivity, label association, and 
 	// Test Focus Sequence: Moving focus programmatically through options.
 	await page.focus(options[0].id); // Focus A
 	await page.focus(options[1].id); // Shift/Tab to B
-	await expect(page).toHaveScreenshot('radio_group_focused');
+	await expect(page).toHaveScreenshot('radio_group_focused.png');
 
 	// Test Blur from non-input element: If another element blurs, the selection state must be retained.
 	await page.click('.other-related-element'); // Simulate focus shift away from the group

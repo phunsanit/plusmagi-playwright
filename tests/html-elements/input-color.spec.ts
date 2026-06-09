@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/color
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/color
 
 import { test, expect } from '@playwright/test';
 
@@ -33,7 +33,7 @@ test('Color input must validate hex format, accessibility attributes, and live u
 
 	// Test Focus: Simulate interaction to ensure the color picker opens correctly.
 	await page.focus(colorPickerSelector);
-	await expect(page).toHaveScreenshot('color_picker_focused'); // Useful for checking if the native UI component appears
+	await expect(page).toHaveScreenshot('color_picker_focused.png'); // Useful for checking if the native UI component appears
 
 	// Test Blur & Live Update: Simulation of losing focus after a valid change.
 	const sampleColor = '#FF6347'; // Tomato color

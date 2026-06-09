@@ -1,26 +1,20 @@
-// ... existing code ...
-/**
- * The compiler options that apply to all TypeScript files in the project.
- */
-export default {
-	extends: "./tsconfig.base.json", // Assuming a base config exists or is needed for structure
-    {
-        "compilerOptions": {
-            "target": "ES2022",
-            "module": "CommonJS",
-            "rootDir": "./tests",
-            "outDir": "./dist/test-output",
-            "esModuleInterop": true,
-            "forceConsistentCasingInFileNames": true,
-            "strict": true,
-            "skipLibCheck": true
-        },
-        "include": [
-            "tests/**/*.ts"
-        ],
-        "exclude": [
-            "node_modules",
-            "src/worker/**"
-        ]
-    }
-    // ... existing code ...
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "rootDir": "./tests",
+    "outDir": "./dist/test-output",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/worker/**"
+  ]
+}

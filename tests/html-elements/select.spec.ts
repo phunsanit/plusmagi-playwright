@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select
 
 import { test, expect } from '@playwright/test';
 
@@ -22,7 +22,7 @@ test('Select dropdown must manage state correctly, respect options, and validate
 
 	// Test Focus and Selection: Opening the dropdown and verifying initial selection state.
 	await page.focus(selectSelector);
-	await expect(page).toHaveScreenshot('select_dropdown_focused');
+	await expect(page).toHaveScreenshot('select_dropdown_focused.png');
 
 	// Test Option Interaction: Selecting an option programmatically.
 	const targetOptionText = 'Germany';
@@ -44,4 +44,4 @@ test('Select dropdown must manage state correctly, respect options, and validate
 
 	// Test C: Resetting Selection (Deselecting).
 	// If possible, test setting the value to null/default if no required selection was made.
-});"
+});

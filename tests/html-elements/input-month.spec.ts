@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/month
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/month
 
 import { test, expect } from '@playwright/test';
 
@@ -21,7 +21,7 @@ test('Month input must validate YYYY-MM format and handle year boundary crossing
 
 	// Test Focus: Must trigger the appropriate combined Year/Month picker widget.
 	await page.focus(monthSelector);
-	await expect(page).toHaveScreenshot('month_picker_focused');
+	await expect(page).toHaveScreenshot('month_picker_focused.png');
 
 	// Test Interaction: Simulating selection interaction that correctly sets both year and month.
 	const initialDate = '2024-11'; // YYYY-MM format for November 2024
@@ -50,4 +50,4 @@ test('Month input must validate YYYY-MM format and handle year boundary crossing
 	await page.fill(monthSelector, '2024/12'); // Using slashes instead of hyphens
 	// Assert that the field either auto-corrects or rejects the invalid format when blurred.
 	await expect(page.locator(monthSelector)).not.toHaveValue('2024/12');
-});"
+});

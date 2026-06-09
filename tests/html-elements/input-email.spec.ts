@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email
 
 import { test, expect } from '@playwright/test';
 
@@ -59,4 +59,4 @@ test('Email input must validate standard format, mandatory attributes, and event
 	// For now, we just assert the content is set and no error is visible on blur/check.
 	await expect(page.locator(emailSelector)).toHaveValue(validEmail);
 
-});"
+});

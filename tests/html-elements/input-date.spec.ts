@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
 
 import { test, expect } from '@playwright/test';
 
@@ -25,7 +25,7 @@ test('Date input must validate YYYY-MM-DD format, handle calendar interaction, a
 	// Test Focus: Check if focusing triggers the native/custom date picker UI overlay.
 	await page.focus(dateSelector);
 	// Note: We might check for an element that only appears when focused, e.g., a calendar dropdown.
-	await expect(page).toHaveScreenshot('date_picker_focused');
+	await expect(page).toHaveScreenshot('date_picker_focused.png'); // This can help verify if the native calendar UI appears as expected.
 
 	// Test Blur: Ensure the value remains correctly set or validates upon losing focus.
 	const initialDate = '2023-10-27';

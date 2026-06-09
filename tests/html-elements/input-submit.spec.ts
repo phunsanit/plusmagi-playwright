@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/submit
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/submit
 
 import { test, expect } from '@playwright/test';
 
@@ -55,4 +55,4 @@ test('Submit button must correctly trigger the form submission lifecycle', async
         if(submitButton) { window.onSubmitBlocked = true; }
     });
     // If submission logic requires pre-validation, test that an explicit JS call prevents the default browser action.
-});"
+});

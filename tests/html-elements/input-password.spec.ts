@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/password
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/password
 
 import { test, expect } from '@playwright/test';
 
@@ -23,7 +23,7 @@ test('Password input must enforce complexity, handle masking, and validate on bl
 	// Test Focus: Check that focus activates a visible password strength indicator/toggle.
 	await page.focus(passwordSelector);
 	// Assert visibility of the show/hide toggle if it exists in the UI context.
-	await expect(page).toHaveScreenshot('password_input_focused');
+	await expect(page).toHaveScreenshot('password_input_focused.png');
 
 	// Test Blur: Crucial for triggering immediate, client-side complexity checks (e.g., minimum length).
 	await page.fill(passwordSelector, 'Short1!'); // Intentionally weak password

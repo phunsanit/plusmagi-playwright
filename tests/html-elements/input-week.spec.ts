@@ -2,30 +2,45 @@
 
 import { test, expect } from '@playwright/test';
 
+const weekSelector = '#week-picker';
+const containerSelector = '.week-selector-wrapper';
+
+// ✅ 1. ย้าย beforeEach ออกมาด้านนอกระดับขอบเขตไฟล์ (File-level Scope)
+test.beforeEach(async ({ page }) => {
+	// ตรวจสอบระบบ Fixture เดิม หากยังไม่มีการประกาศ ให้สร้าง Mock DOM ขึ้นมาแทนการ page.goto
+	if (typeof inputSetup !== 'undefined') {
+		await inputSetup.setupContext(page);
+	} else {
+		// 🛠️ จำลองหน้าเว็บที่มีโครงสร้างแท็กตามที่คุณต้องการทดสอบขึ้นมาตรงๆ
+		await page.setContent(`
+			<div class="week-selector-wrapper">
+				<label for="week-picker">Select Week:</label>
+				<input type="week" id="week-picker" autocomplete="off" />
+			</div>
+		`);
+	}
+});
+
 /**
  * Test Suite for HTML week input validation (type="week").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/week
  */
 test('Week input must correctly validate and handle YYYY-Www format', async ({ page }) => {
-	// *** INHERITANCE STEP ***
-	await test.beforeEach(async () => {
-		// Use the centralized setup fixture for all week-based testing.
-		await inputSetup.setupContext(page); // Fixture call based on global setup.
-	});
 
-	const weekSelector = '#week-picker';
-	const containerSelector = '.week-selector-wrapper';
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
-
-	await expect(page.locator(containerSelector)).toContainElement(page.getByRole('label'));
+	// ปรับปรุงการตรวจสอบ Label ภายในคอนเทนเนอร์ให้ทำงานได้แม่นยำขึ้น
+	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(weekSelector)).toHaveAttribute('type', 'week');
 
 
 	// --- 2. Event Validation Checks (Focus & Blur) ---
-
-	// Test Focus: Must trigger the week picker widget, typically displaying a calendar grid.
+	// Test Focus: เคาะโฟกัสไปที่ Input
 	await page.focus(weekSelector);
-	await expect(page).toHaveScreenshot('week_picker_focused');
+
+	// หมายเหตุ: การตรวจ Screenshot ถ้ารันครั้งแรกระบบจะสร้างไฟล์ Master Image ไว้ให้ก่อน
+	// และถ้ารันครั้งถัดไปจะเปิดฟีเจอร์เปรียบเทียบรูปภาพ (Visual Regression) อัตโนมัติครับ
+	await expect(page).toHaveScreenshot('week_picker_focused.png');
+
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Format) ---
 
@@ -43,4 +58,4 @@ test('Week input must correctly validate and handle YYYY-Www format', async ({ p
 	const nextYearStart = '2025-W01';
 	await page.fill(weekSelector, nextYearStart);
 	await expect(page.locator(weekSelector)).toHaveValue(nextYearStart);
-});"
+});

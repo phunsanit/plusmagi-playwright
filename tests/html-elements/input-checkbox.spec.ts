@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/checkbox
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/checkbox
 
 import { test, expect } from '@playwright/test';
 
@@ -25,7 +25,7 @@ test('Checkbox input must manage state correctly, respect accessibility labels, 
 
 	// Test Focus: Ensure focus is visually received.
 	await page.focus(checkboxSelector);
-	await expect(page).toHaveScreenshot('checkbox_focused');
+	await expect(page).toHaveScreenshot('checkbox_focused.png');
 
 	// Test Label Interaction: Simulating clicks on the associated label element.
 	await labelLocator.click(); // Click via label should toggle state

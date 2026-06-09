@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form
 
 import { test, expect } from '@playwright/test';
 
@@ -51,7 +51,7 @@ test('Form container must validate structural attributes, method flow, and requi
 	// Trigger the final submission.
 	await page.click('button[type="submit"]');
 	// Assertion: Check for expected success navigation or API response confirmation.
-	await expect(page).toHaveURL(/checkout/success/); // Adjust URL as necessary
+	await expect(page).toHaveURL('**/checkout/success'); // Adjust URL as necessary
 
 	// Test B: Mandatory Field Failure Simulation (Simulating failure in one component).
 	await page.goto('https://staging.mock-website.com/checkout'); // Reset state
@@ -62,4 +62,4 @@ test('Form container must validate structural attributes, method flow, and requi
 	// Assert that submission fails and specifically points out the missing required field error.
 	await expect(page).toHaveURL('**/checkout');
 	await expect(page.locator('.form-error')).toContainText('Username is required.');
-});"
+});

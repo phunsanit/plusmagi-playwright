@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
 
 import { test, expect } from '@playwright/test';
 

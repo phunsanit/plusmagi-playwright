@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
 
 import { test, expect } from '@playwright/test';
 
@@ -42,4 +42,4 @@ test('Label must correctly associate and trigger focus on associated form contro
 	const complexLabel = page.getByRole('textbox', { name: 'Full Name' }); // A field labeled by combination of IDs/text.
 	await expect(complexLabel).toBeVisible();
 
-});"
+});

@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/time
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/time
 
 import { test, expect } from '@playwright/test';
 
@@ -21,7 +21,7 @@ test('Time input must validate HH:MM:SS format and handle picker interaction', a
 
 	// Test Focus: Must trigger the time picker widget overlay.
 	await page.focus(timeSelector);
-	await expect(page).toHaveScreenshot('time_picker_focused');
+	await expect(page).toHaveScreenshot('time_picker_focused.png');
 
 	// Test Interaction: Simulating direct input of a valid time.
 	const sampleTime = '14:30:00'; // 2:30 PM
@@ -46,4 +46,4 @@ test('Time input must validate HH:MM:SS format and handle picker interaction', a
 	await page.fill(timeSelector, invalidTime);
 	// Expect the browser/library to correct this, usually by clamping it to the max valid value (e.g., 14:59:59).
 	await expect(page.locator(timeSelector)).not.toHaveValue('14:65:00');
-});"
+});

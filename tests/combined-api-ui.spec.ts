@@ -21,10 +21,10 @@ try {
 
 	// 2. UI VALIDATION (The Frontend Test)
 	await page.goto('https://staging.mock-website.com/login');
-	\t// Use data retrieved from the successful API call.
-	\tawait page.fill('#username', user.username);
-	\tawait page.fill('#password', 'secure_password123');
-	\tawait page.click('button:has-text(\'Login\')');
+		// Use data retrieved from the successful API call.
+		await page.fill('#username', user.username);
+		await page.fill('#password', 'secure_password123');
+		await page.click('button:has-text(\'Login\')');
 	// Assert final UI state using data validated in Step 1.
 	await expect(page.locator('.user-profile h1')).toHaveText(`Welcome back, ${user.username}`);
 });

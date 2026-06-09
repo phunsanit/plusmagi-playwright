@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/datetime-local
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/datetime-local
 
 import { test, expect } from '@playwright/test';
 
@@ -25,7 +25,7 @@ test('Datetime-Local input must validate ISO format, handle picker interaction, 
 	// Test Focus: Check if focusing triggers the comprehensive picker widget overlay.
 	await page.focus(dateTimeSelector);
 	// Screenshot check is crucial here to validate complex UI appearance.
-	await expect(page).toHaveScreenshot('datetime_picker_focused');
+	await expect(page).toHaveScreenshot('datetime_picker_focused.png');
 
 	// Test Blur & Value Confirmation: Setting a known valid value and confirming it persists.
 	const sampleDateTime = '2025-10-01T09:00';

@@ -1,4 +1,4 @@
-"\"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/url
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/url
 
 import { test, expect } from '@playwright/test';
 
@@ -21,7 +21,7 @@ test('URL input must validate correct URI scheme and structure', async ({ page }
 
 	// Test Focus: Ensure focus triggers browser-level autocomplete suggestions if possible.
 	await page.focus(urlSelector);
-	await expect(page).toHaveScreenshot('url_input_focused');
+	await expect(page).toHaveScreenshot('url_input_focused.png');
 
 	// Test Blur & Validation: Simulate entering an incomplete or malformed URL, then blurring to trigger validation error.
 	const badUrl = 'www.example'; // Missing scheme://
@@ -45,4 +45,4 @@ test('URL input must validate correct URI scheme and structure', async ({ page }
 	const plainString = 'example.com';
 	await page.fill(urlSelector, plainString); // Manually entering without scheme
 	await expect(page.locator(urlSelector)).toHaveValue('example.com'); // Client-side might accept this; server validation is key.
-});"
+});

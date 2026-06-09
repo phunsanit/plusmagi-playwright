@@ -51,4 +51,3 @@ test('Search input must handle autocomplete suggestions, clear state, and struct
 	await clearButton.click();
 	await expect(page.locator(searchSelector)).toHaveValue(''); // Should reset the input field.
 });
-

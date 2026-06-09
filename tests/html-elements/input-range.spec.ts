@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range
 
 import { test, expect } from '@playwright/test';
 
@@ -48,4 +48,4 @@ test('Range slider must respect defined min, max, and step boundaries', async ({
 
 	// Assertion: The actual value should be clamped to the maximum allowed boundary (100).
 	await expect(page.locator(rangeSelector)).toHaveValue('100');
-});"
+});

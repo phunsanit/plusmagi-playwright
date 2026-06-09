@@ -1,4 +1,4 @@
-"//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/tel
+//https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/tel
 
 import { test, expect } from '@playwright/test';
 
@@ -23,7 +23,7 @@ test('Telephone input must validate common national/international formats and ac
 
 	// Test Focus: Ensure focus triggers appropriate keyboard handling/input mask suggestions.
 	await page.focus(telSelector);
-	await expect(page).toHaveScreenshot('phone_input_focused');
+	await expect(page).toHaveScreenshot('phone_input_focused.png');
 
 	// Test Blur on invalid input: Should retain the value or display a warning, not crash.
 	const badInput = 'abc-def';
