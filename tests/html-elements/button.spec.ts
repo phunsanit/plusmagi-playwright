@@ -7,7 +7,18 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button
  */
 test('Button must execute specified JavaScript actions without interfering with form submission flow', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/dashboard');
+	await page.setContent(`
+		<form>
+			<input id="form-username" name="username" />
+			<button type="button" id="action-trigger">Action</button>
+			<div id="status-display"></div>
+		</form>
+	`);
+	await page.evaluate(() => {
+		document.querySelector('#action-trigger')?.addEventListener('click', () => {
+			document.querySelector('#status-display')!.textContent = 'Custom JavaScript executed successfully!';
+		});
+	});
 	const actionButtonSelector = '#action-trigger';
 	const statusDisplaySelector = '#status-display';
 

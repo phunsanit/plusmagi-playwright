@@ -13,7 +13,7 @@ import { handleReportFailure } from '../utils/report-generator'; // For consiste
 
 test.beforeAll(async ({ page }) => {
 	console.log("Setting up the master context fixture for input testing.");
-	await page.goto('https://staging.mock-website.com/form'); // Common base form page.
+	await page.setContent('<form id="master-form"><input id="username" /></form>'); // Common base form page mock.
 });
 
 /**
@@ -28,4 +28,3 @@ export const inputSetup = {
 		await page.fill('#username', '');
 	}
 };
-

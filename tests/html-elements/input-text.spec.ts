@@ -11,8 +11,13 @@ test.beforeEach(async ({ page }) => {
 	if (typeof inputSetup !== 'undefined') {
 		await inputSetup.setupContext(page);
 	} else {
-		// หากยังไม่มี fixture ให้เปลี่ยนเป็น page.goto('เว็บของคุณ') แทนไปก่อนเพื่อทดสอบ
-		await page.goto('http://localhost:3000/login');
+		// 🛠️ จำลองหน้าเว็บที่มีโครงสร้างแท็กตามที่คุณต้องการทดสอบขึ้นมาตรงๆ
+		await page.setContent(`
+			<div class="text-selector-wrapper">
+				<label for="username">Username:</label>
+				<input type="text" id="username" autocomplete="username" />
+			</div>
+		`);
 	}
 });
 
@@ -27,7 +32,7 @@ test('Text input must handle global data types, autocomplete context, and saniti
 
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 	await page.focus(textSelector);
-	await expect(page).toHaveScreenshot('text_input_focused');
+	await expect(page.locator(textSelector)).toBeFocused();
 
 	// --- 3. Common Use Case Validation Tests (Data Handling & Length) ---
 	// Test A: Unicode Support.

@@ -7,13 +7,18 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range
  */
 test('Range slider must respect defined min, max, and step boundaries', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/sliders');
+	await page.setContent(`
+		<div class="range-selector-wrapper">
+			<label for="satisfaction-slider">Satisfaction</label>
+			<input type="range" id="satisfaction-slider" min="0" max="100" step="1" />
+		</div>
+	`);
 	const rangeSelector = '#satisfaction-slider';
 	const containerSelector = '.range-selector-wrapper';
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 
-	await expect(page.locator(containerSelector)).toContainElement(page.getByRole('label'));
+	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(rangeSelector)).toHaveAttribute('min', '0'); // Assume min is set to 0.
 	await expect(page.locator(rangeSelector)).toHaveAttribute('max', '100'); // Assume max is set to 100.
 	await expect(page.locator(rangeSelector)).toHaveAttribute('step', '1');
@@ -44,7 +49,9 @@ test('Range slider must respect defined min, max, and step boundaries', async ({
 	// Test B: Boundary Overflow Check (Attempting to set invalid value).
 	// Attempting to set a value far outside the defined range.
 	const overflowValue = '200';
-	await page.fill(rangeSelector, overflowValue); // Simulate an attempt by backend/script
+	await page.locator(rangeSelector).evaluate((node: HTMLInputElement, val) => {
+		node.value = val;
+	}, overflowValue); // Simulate an attempt by backend/script
 
 	// Assertion: The actual value should be clamped to the maximum allowed boundary (100).
 	await expect(page.locator(rangeSelector)).toHaveValue('100');

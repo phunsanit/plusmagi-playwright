@@ -7,7 +7,17 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/reset
  */
 test('Reset button must clear ALL form inputs back to their initial state', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/form');
+	await page.setContent(`
+		<form>
+			<input id="field-name" />
+			<select id="country-select">
+				<option value="">Select</option>
+				<option value="US">United States</option>
+			</select>
+			<input type="checkbox" id="optin-checkbox" />
+			<button type="reset">Reset</button>
+		</form>
+	`);
 	const resetSelector = 'button[type="reset"]';
 
 	// --- 1. Attribute Validation Checks (Structural) ---

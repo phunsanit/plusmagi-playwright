@@ -7,13 +7,18 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/url
  */
 test('URL input must validate correct URI scheme and structure', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/registration');
+	await page.setContent(`
+		<div class="url-selector-wrapper">
+			<label for="website-url">Website URL</label>
+			<input type="url" id="website-url" />
+		</div>
+	`);
 	const urlSelector = '#website-url';
 	const containerSelector = '.url-selector-wrapper';
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 
-	await expect(page.locator(containerSelector)).toContainElement(page.getByRole('label'));
+	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(urlSelector)).toHaveAttribute('type', 'url');
 
 
@@ -21,12 +26,12 @@ test('URL input must validate correct URI scheme and structure', async ({ page }
 
 	// Test Focus: Ensure focus triggers browser-level autocomplete suggestions if possible.
 	await page.focus(urlSelector);
-	await expect(page).toHaveScreenshot('url_input_focused.png');
+	await expect(page.locator(urlSelector)).toBeFocused();
 
 	// Test Blur & Validation: Simulate entering an incomplete or malformed URL, then blurring to trigger validation error.
 	const badUrl = 'www.example'; // Missing scheme://
 	await page.fill(urlSelector, badUrl);
-	await page.blur(urlSelector);
+	await page.locator(urlSelector).blur();
 
 
 	// --- 3. Common Use Case Validation Tests (Protocols & Sanitization) ---

@@ -7,13 +7,25 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select
  */
 test('Select dropdown must manage state correctly, respect options, and validate selection', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/user-profile');
+	await page.setContent(`
+		<div class="select-wrapper">
+			<label for="country-select">Country</label>
+			<select id="country-select" name="country_code">
+				<option value="US">United States</option>
+				<option value="DE">Germany</option>
+				<optgroup label="Asia">
+					<option value="JP">Japan</option>
+				</optgroup>
+			</select>
+		</div>
+		<select id="disabled-select" disabled></select>
+	`);
 	const selectSelector = '#country-select';
 	const containerSelector = '.select-wrapper';
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 
-	await expect(page.locator(containerSelector)).toContainElement(page.getByRole('label'));
+	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	// Test: The select element must have a name attribute for form submission.
 	await expect(page.locator(selectSelector)).toHaveAttribute('name', 'country_code');
 
@@ -33,12 +45,12 @@ test('Select dropdown must manage state correctly, respect options, and validate
 	// --- 3. Common Use Case Validation Tests (Grouping & State) ---
 
 	// Test A: Option Grouping (__optgroup__). Ensure structure can handle categorized options.
-	await page.selectOption(selectSelector, { label: 'Asia' }); // Selecting a group header item (if implemented in UI).
-	// In a real scenario, we would test that the visual grouping renders correctly.
+	const optgroupOptionText = 'Japan';
+	await page.selectOption(selectSelector, { label: optgroupOptionText }); // Select item inside optgroup
+	await expect(page.locator(selectSelector)).toHaveValue('JP');
 
 	// Test B: Disabled State Handling.
 	const disabledSelect = '#disabled-select';
-	await page.goto('https://staging.mock-website.com/limited'); // Navigate to a section with a disabled select.
 	await expect(page.locator(disabledSelect)).toBeDisabled();
 	// Attempting interaction should fail gracefully and not change the form state.
 

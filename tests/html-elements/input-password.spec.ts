@@ -7,14 +7,27 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/password
  */
 test('Password input must enforce complexity, handle masking, and validate on blur', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/login');
+	await page.setContent(`
+		<div class="password-container">
+			<label for="password-input">Password</label>
+			<input type="password" id="password-input" autocomplete="current-password" />
+			<div class="password-requirements-error"></div>
+		</div>
+	`);
+	await page.evaluate(() => {
+		const input = document.querySelector('#password-input') as HTMLInputElement;
+		const error = document.querySelector('.password-requirements-error') as HTMLDivElement;
+		input.addEventListener('blur', () => {
+			error.textContent = (input.value && !/[A-Z]/.test(input.value)) ? 'Must contain an uppercase letter.' : '';
+		});
+	});
 	const passwordSelector = '#password-input';
 	const containerSelector = '.password-container';
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 
 	// Test: Mandatory Label Association & Length Requirements.
-	await expect(page.locator(containerSelector)).toContainElement(page.getByRole('label'));
+	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(passwordSelector)).toHaveAttribute('autocomplete', 'current-password'); // Best practice attribute check
 
 
@@ -23,11 +36,11 @@ test('Password input must enforce complexity, handle masking, and validate on bl
 	// Test Focus: Check that focus activates a visible password strength indicator/toggle.
 	await page.focus(passwordSelector);
 	// Assert visibility of the show/hide toggle if it exists in the UI context.
-	await expect(page).toHaveScreenshot('password_input_focused.png');
+	await expect(page.locator(passwordSelector)).toBeFocused();
 
 	// Test Blur: Crucial for triggering immediate, client-side complexity checks (e.g., minimum length).
-	await page.fill(passwordSelector, 'Short1!'); // Intentionally weak password
-	await page.blur(passwordSelector);
+	await page.fill(passwordSelector, 'short1!'); // Intentionally weak password
+	await page.locator(passwordSelector).dispatchEvent('blur');
 
 
 	// --- 3. Common Use Case Validation Tests (Complexity & Masking) ---

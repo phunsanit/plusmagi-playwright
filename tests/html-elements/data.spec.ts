@@ -10,7 +10,14 @@ import { test, expect } from '@playwright/test';
  * NOTE: Validation relies heavily on global context attributes (see global-attributes.spec.ts) to ensure data-* values are read correctly by JS.*
  */
 test('Data attributes must pass serialization data and integrate with global attribute checks', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/product-view');
+	await page.setContent(`
+		<div id="main-product-card" data-product-id="PROD-001">
+			<span data-sku="SKU-987654"></span>
+		</div>
+		<input id="username" />
+		<div id="username-help"></div>
+		<div id="name-help"></div>
+	`);
 	const productSelector = '#main-product-card';
 	const skuAttributeSelector = '[data-sku]';
 
@@ -25,9 +32,9 @@ test('Data attributes must pass serialization data and integrate with global att
 	await page.evaluate(() => {
 		const input = document.getElementById('username'); // Assume this is a primary field.
 		if (input) {
-			input.setAttribute('aria-details', 'This name belongs to product ' + 'CUST123' ); // Using data attribute for ARIA context.
+			input.setAttribute('aria-describedby', '#name-help'); // Using data attribute for ARIA context.
 			// Also set a visible help text that the global test relies on.
-			document.getElementById('username-help').textContent = 'Helpful description based on data-sku.';
+			document.getElementById('name-help')!.textContent = 'Helpful description based on SKU-987654.';
 		}
 	});
 
@@ -40,7 +47,9 @@ test('Data attributes must pass serialization data and integrate with global att
 	// --- 3. Serialization Test: Ensuring complex objects are passed correctly and read by JS ---
 
 	const complexMetadata = JSON.stringify({ weight_kg: 1.2, dimensions: '10x20' });
-	await page.evaluate(() => { element.setAttribute('data-metadata', complexMetadata); }, productSelector); // Re-set the known attribute.
+	await page.locator(productSelector).evaluate((node, meta) => {
+		node.setAttribute('data-metadata', meta);
+	}, complexMetadata);
 
 	// Final read validation, proving data integrity across all layers.
 	const finalData = await page.getAttribute(productSelector, 'data-metadata');

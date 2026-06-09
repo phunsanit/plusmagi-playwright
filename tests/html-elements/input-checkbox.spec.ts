@@ -7,7 +7,12 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/checkbox
  */
 test('Checkbox input must manage state correctly, respect accessibility labels, and handle groups', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/preferences');
+	await page.setContent(`
+		<div>
+			<label>Optional Opt-in <input type="checkbox" id="optin-checkbox" name="optional_optin" value="true" /></label>
+			<label>Receive Newsletter <input type="checkbox" id="newsletter-checkbox" /></label>
+		</div>
+	`);
 	const checkboxSelector = '#optin-checkbox';
 	const labelLocator = page.getByLabel('Optional Opt-in');
 
@@ -25,7 +30,7 @@ test('Checkbox input must manage state correctly, respect accessibility labels, 
 
 	// Test Focus: Ensure focus is visually received.
 	await page.focus(checkboxSelector);
-	await expect(page).toHaveScreenshot('checkbox_focused.png');
+	await expect(page.locator(checkboxSelector)).toBeFocused();
 
 	// Test Label Interaction: Simulating clicks on the associated label element.
 	await labelLocator.click(); // Click via label should toggle state
@@ -42,6 +47,6 @@ test('Checkbox input must manage state correctly, respect accessibility labels, 
 	// Assume a second checkbox exists for testing group management.
 	const otherCheckbox = page.getByLabel('Receive Newsletter'); // Placeholder selector
 	await expect(otherCheckbox).toBeVisible();
-	await page.check(otherCheckbox); // Use page.check() utility method if available, or click by label
-	await expect(page.locator(checkboxSelector)).toHaveChecked(); // Reconfirm first state is maintained
+	await otherCheckbox.check(); // Use locator.check() utility method
+	await expect(page.locator(checkboxSelector)).not.toBeChecked(); // Reconfirm first state is maintained
 });

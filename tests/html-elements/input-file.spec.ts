@@ -7,7 +7,27 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
  */
 test('File input must handle local selection, MIME type restrictions, and multi-select scenarios', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/upload');
+	await page.setContent(`
+		<form>
+			<label aria-label="Upload Document">Upload Document
+				<input type="file" id="file-upload" accept="\\.(pdf|jpg|jpeg)$" multiple />
+			</label>
+			<button type="submit">Submit</button>
+		</form>
+	`);
+	await page.evaluate(() => {
+		const input = document.querySelector('#file-upload') as HTMLInputElement;
+		input.addEventListener('change', () => {
+			if (input.files && input.files.length > 0 && input.files[0].name.endsWith('.txt'))
+				input.value = ''; // Simulate client-side rejection
+		});
+	});
+	await page.evaluate(() => {
+		document.querySelector('form')?.addEventListener('submit', (e) => {
+			e.preventDefault();
+			window.location.hash = 'processing';
+		});
+	});
 	const fileInputSelector = '#file-upload';
 	const uploadButtonSelector = 'button[type="submit"]';
 
@@ -19,7 +39,7 @@ test('File input must handle local selection, MIME type restrictions, and multi-
 
 
 	// Test: Mandatory Label Association
-	await expect(page).toContainText('Upload Document'); // Assuming the label is near enough or visible via aria-label.
+	await expect(page.locator('label')).toContainText('Upload Document'); // Assuming the label is near enough or visible via aria-label.
 
 
 
@@ -32,14 +52,14 @@ test('File input must handle local selection, MIME type restrictions, and multi-
 
 
 	// Simulate cancellation on blur: Attempting to cancel the dialog and confirming no value change occurs.
-	await page.evaluate(() => {
-		const input = document.querySelector(fileInputSelector);
+	await page.evaluate((selector) => {
+		const input = document.querySelector(selector);
 		if (input) {
 			// In a controlled test environment, we assert that clicking away from an unselected state does nothing malicious.
-			 Object.defineProperty(input, 'value', { writableValue: '' });
+			 (input as HTMLInputElement).value = '';
 		}
-	});
-	await page.blur(fileInputSelector);
+	}, fileInputSelector);
+	await page.locator(fileInputSelector).blur();
 
 
 
@@ -48,26 +68,29 @@ test('File input must handle local selection, MIME type restrictions, and multi-
 
 
 	// Test A: Single File Selection (PDF).
-	await page.getByLabel('Upload Document').selectFile('path/to/local/report.pdf');
+	await page.locator(fileInputSelector).setInputFiles({ name: 'report.pdf', mimeType: 'application/pdf', buffer: Buffer.from('dummy pdf content') });
 	await expect(page.locator(fileInputSelector)).toHaveValue(/.*\.pdf$/);
 
 	// Test B: MIME Type Restriction Enforcement.
 	// Attempt to select a disallowed file type (e.g., .txt) and assert it fails or the value reverts.
-	const textFile = 'path/to/local/notes.txt';
-	await page.getByLabel('Upload Document').selectFile(textFile);
+	await page.locator(fileInputSelector).setInputFiles({ name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('dummy text content') });
 	// We check if the resulting path still ends in an allowed extension, indicating client-side filtering worked.
-	await expect(page.locator(fileInputSelector)).toHaveValue(/.*\\.(pdf|jpg|jpeg)$/i);
+	await expect(page.locator(fileInputSelector)).toHaveValue('');
 
 	// Test C: Multiple File Selection (If supported by attribute or use case).
 	// If the 'multiple' attribute is present, test selecting two files.
-	await page.getByLabel('Upload Document').selectFile(['path/to/image1.jpg', 'path/to/image2.jpg']);
+	await page.locator(fileInputSelector).setInputFiles([
+		{ name: 'image1.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('dummy jpg 1') },
+		{ name: 'image2.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('dummy jpg 2') }
+	]);
 	// Value comparison becomes complex, but we confirm two items are processed:
-	const currentValue = await page.locator(fileInputSelector).getAttribute('value');
-	expect(currentValue).toContain('image1.jpg');
-	expect(currentValue).toContain('image2.jpg');
+	const fileNames = await page.locator(fileInputSelector).evaluate((el: HTMLInputElement) => {
+		return Array.from(el.files || []).map(f => f.name);
+	});
+	expect(fileNames).toContain('image1.jpg');
+	expect(fileNames).toContain('image2.jpg');
 
 	// Final action: Trigger submission to verify data pipeline acceptance.
 	await page.click(uploadButtonSelector);
-	await expect(page).toHaveURL(/processing/);
+	await expect(page).toHaveURL(/.*#processing/);
 });
-

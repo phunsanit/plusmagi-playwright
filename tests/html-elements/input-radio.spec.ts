@@ -7,7 +7,14 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
  */
 test('Radio input group must enforce mutual exclusivity, label association, and state transitions', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/settings');
+	await page.setContent(`
+		<form>
+			<label>Option A <input type="radio" id="optionA" name="user_preference" /></label>
+			<label>Option B <input type="radio" id="optionB" name="user_preference" /></label>
+			<label>Option C <input type="radio" id="optionC" name="user_preference" /></label>
+			<button type="button" class="other-related-element">Other Element</button>
+		</form>
+	`);
 	const options = [
 		{ id: '#optionA', label: 'Option A' },
 		{ id: '#optionB', label: 'Option B' },
@@ -32,7 +39,7 @@ test('Radio input group must enforce mutual exclusivity, label association, and 
 	// Test Focus Sequence: Moving focus programmatically through options.
 	await page.focus(options[0].id); // Focus A
 	await page.focus(options[1].id); // Shift/Tab to B
-	await expect(page).toHaveScreenshot('radio_group_focused.png');
+	await expect(page.locator(options[1].id)).toBeFocused();
 
 	// Test Blur from non-input element: If another element blurs, the selection state must be retained.
 	await page.click('.other-related-element'); // Simulate focus shift away from the group

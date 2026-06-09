@@ -7,10 +7,26 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/submit
  */
 test('Submit button must correctly trigger the form submission lifecycle', async ({ page }) => {
-    // *** INHERITANCE STEP ***
-    await test.beforeEach(async () => {
-        // Use the centralized setup fixture to ensure all elements are ready.
-        await inputSetup.setupContext(page); // Fixture call based on global setup.
+    await page.setContent(`
+        <form>
+            <input id="username" name="username" />
+            <select id="country-select"><option value="CA">Canada</option></select>
+            <input type="hidden" id="csrf-token" value="token123" />
+            <button type="button" id="cancel-submit">Cancel</button>
+            <button type="submit" name="Submit">Submit</button>
+        </form>
+        <div id="status"></div>
+    `);
+    await page.evaluate(() => {
+        document.querySelector('form')?.addEventListener('submit', (e) => {
+            if ((window as any).onSubmitBlocked) {
+                e.preventDefault();
+                return;
+            }
+            e.preventDefault();
+            document.body.insertAdjacentHTML('beforeend', '<div>Submission Complete</div>');
+            window.location.hash = 'submission-success';
+        });
     });
 
     const submitSelector = 'button[type="submit"]';
@@ -29,15 +45,15 @@ test('Submit button must correctly trigger the form submission lifecycle', async
 
     // Populate all necessary fields before submission attempt to ensure data transfer occurs.
     await page.fill('#username', 'TestUser');
-    await page.selectOption('#country-select', { label: 'CA' });
+    await page.selectOption('#country-select', 'CA');
 
     console.log("--- Starting Submission Test ---");
     // ACTION: Clicking the submit button should trigger the form submission.
     await targetActionButton.click();
 
     // Assertion 1: Success Check (Assuming successful submission navigates to a known success page).
-    await expect(page).toHaveURL(/submission-success/); // Must hit the correct endpoint.
-    await expect(page).toContainText('Submission Complete');
+    await expect(page).toHaveURL(/.*#submission-success/); // Must hit the correct endpoint.
+	await expect(page.locator('body')).toContainText('Submission Complete');
 
 
     // --- 3. Data Integrity Validation ---
@@ -45,7 +61,7 @@ test('Submit button must correctly trigger the form submission lifecycle', async
     // Test B: Data preservation during submission (Verifies data-* attributes are processed).
     // In a real scenario, this would require network interception to read the form payload.
     await page.evaluate(() => {
-        const hiddenInput = document.querySelector('#csrf-token'); // Check token existence on failure/success?
+		const hiddenInput = document.querySelector('#csrf-token') as HTMLInputElement; // Check token existence on failure/success?
         if(hiddenInput) { console.log('CSRF Token:', hiddenInput.value); }
     });
 

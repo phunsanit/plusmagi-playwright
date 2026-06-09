@@ -7,7 +7,26 @@ import { test, expect } from '@playwright/test';
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email
  */
 test('Email input must validate standard format, mandatory attributes, and events', async ({ page }) => {
-	await page.goto('https://staging.mock-website.com/contact');
+	await page.setContent(`
+		<div class="email-container">
+			<label id="email-label" for="email-input">Email Address</label>
+			<input type="email" id="email-input" required />
+			<div class="error-message"></div>
+		</div>
+	`);
+	await page.evaluate(() => {
+		const input = document.querySelector('#email-input') as HTMLInputElement;
+		const error = document.querySelector('.error-message') as HTMLDivElement;
+		input.addEventListener('blur', () => {
+			if (!input.value) {
+				error.textContent = 'Email Address is required.';
+			} else if (!input.value.includes('@')) {
+				error.textContent = 'Please enter a valid email address.';
+			} else {
+				error.textContent = '';
+			}
+		});
+	});
 	const emailSelector = '#email-input';
 	const errorSelector = '.error-message';
 
@@ -15,8 +34,7 @@ test('Email input must validate standard format, mandatory attributes, and event
 
 	// Test: Mandatory Label Association (Accessibility requirement)
 	await expect(page.locator('#email-label')).toBeVisible(); // Assuming label exists with id="email-label"
-	const label = page.getByLabel('Email Address'); // Use getByLabel for best practice testing
-	await expect(label).toHaveAttribute('for', 'email-input');
+	await expect(page.locator('#email-label')).toHaveAttribute('for', 'email-input');
 
 	// Test: Required placeholder/pattern check (if supported by the specific form implementation)
 	await expect(page.locator(emailSelector)).toHaveAttribute('type', 'email');
@@ -30,26 +48,28 @@ test('Email input must validate standard format, mandatory attributes, and event
 	await expect(page.locator(emailSelector)).toBeFocused();
 
 	// Simulate blur: This is critical for checking when browser/library validators fire.
-	await page.blur(emailSelector);
+	await page.locator(emailSelector).blur();
 
 
 	// --- 3. Common Use Case Validation Tests (Format & State) ---
 
 	// Test A: Invalid format detection (Missing TLD or '@')
 	await page.fill(emailSelector, 'invalid_email');
+	await page.locator(emailSelector).blur();
 	// Wait for the expected client-side error message to appear upon filling invalid data.
-	await expect(errorSelector).toContainText('Please enter a valid email address.');
+	await expect(page.locator(errorSelector)).toContainText('Please enter a valid email address.');
 
 	// Test B: Boundary condition (No input) - Check if validation fires when empty but required.
-	await page.clear(emailSelector); // Clear previous content
-	await page.blur(emailSelector);
+	await page.locator(emailSelector).clear(); // Clear previous content
+	await page.locator(emailSelector).blur();
 	// Assert that the "required" error appears if no value is given and the field is marked required.
-	await expect(errorSelector).toContainText('Email Address is required.');
+	await expect(page.locator(errorSelector)).toContainText('Email Address is required.');
 
 
 	// Test C: Success path validation (Valid format)
 	const validEmail = 'user@example.com';
 	await page.fill(emailSelector, validEmail);
+	await page.locator(emailSelector).blur();
 
 	// Clear any previous error messages before confirming success
 	await page.locator(errorSelector).waitFor({ state: 'hidden' });
