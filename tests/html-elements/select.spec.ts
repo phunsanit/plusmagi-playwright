@@ -34,7 +34,6 @@ test('Select dropdown must manage state correctly, respect options, and validate
 	// Test: The select element must have a name attribute for form submission.
 	await expect(page.locator(selectSelector)).toHaveAttribute('name', 'country_code');
 
-
 	// --- 2. Event Validation Checks (Interaction) ---
 
 	// Test Focus and Selection: Opening the dropdown and verifying initial selection state.
@@ -45,7 +44,6 @@ test('Select dropdown must manage state correctly, respect options, and validate
 	const targetOptionText = 'Germany';
 	await page.selectOption(selectSelector, { label: targetOptionText }); // Use the label for robustness.
 	await expect(page.locator(selectSelector)).toHaveValue('DE'); // Assert that the *value* (not text) is correctly set on the input.
-
 
 	// --- 3. Common Use Case Validation Tests (Grouping & State) ---
 

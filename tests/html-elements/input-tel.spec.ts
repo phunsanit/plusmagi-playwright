@@ -27,7 +27,6 @@ test('Telephone input must validate common national/international formats and ac
 	// Use a broad regex pattern to cover common international formats (e.g., optional country code + digits).
 	await expect(page.locator(telSelector)).toHaveAttribute('pattern', '^\\+?[0-9\\(\\)\\-\\s]+$');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Ensure focus triggers appropriate keyboard handling/input mask suggestions.
@@ -39,7 +38,6 @@ test('Telephone input must validate common national/international formats and ac
 	await page.fill(telSelector, badInput);
 	await page.locator(telSelector).blur();
 	// We assert that even if the UI is lax, the state should be clearly marked as requiring correction or accept the input's current value.
-
 
 	// --- 3. Common Use Case Validation Tests (Formats & Internationalization) ---
 

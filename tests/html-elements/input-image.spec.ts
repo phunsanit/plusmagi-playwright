@@ -39,7 +39,6 @@ test('Image input must restrict file types via MIME acceptance and simulate prev
 	// Test: Mandatory Label Association for Accessibility.
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Should trigger the file dialog and potentially a thumbnail preview mechanism on focus/selection.
@@ -48,7 +47,6 @@ test('Image input must restrict file types via MIME acceptance and simulate prev
 	// Test Blur: Simulate losing focus after selecting a valid image, ensuring the system reads the correct path.
 	await page.locator(imageSelector).setInputFiles({ name: 'portrait.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('dummy jpg') });
 	await page.locator(imageSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Format & Preview) ---
 

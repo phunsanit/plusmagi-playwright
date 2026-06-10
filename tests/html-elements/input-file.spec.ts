@@ -32,23 +32,18 @@ test('File input must handle local selection, MIME type restrictions, and multi-
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 
-
 	// Test: MIME Type Restriction via 'accept' attribute.
 	await expect(page.locator(fileInputSelector)).toHaveAttribute('accept', '\\.(pdf|jpg|jpeg)$');
-
 
 	// Test: Mandatory Label Association
 	await expect(page.locator('label')).toContainText('Upload Document'); // Assuming the label is near enough or visible via aria-label.
 
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
-
 
 	// Test Focus: Interacting with the file input should open a dialog (testing focus state).
 	await page.focus(fileInputSelector);
 	// Note: For actual testing, one would mock the OS dialog interaction.
-
 
 	// Simulate cancellation on blur: Attempting to cancel the dialog and confirming no value change occurs.
 	await page.evaluate((selector) => {
@@ -61,9 +56,7 @@ test('File input must handle local selection, MIME type restrictions, and multi-
 	await page.locator(fileInputSelector).blur();
 
 
-
 	// --- 3. Common Use Case Validation Tests (Selection & Restriction) ---
-
 
 
 	// Test A: Single File Selection (PDF).

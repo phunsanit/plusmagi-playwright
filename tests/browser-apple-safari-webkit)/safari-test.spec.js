@@ -3,15 +3,15 @@ test.describe('Safari WebKit Specific Features', () => {
 	// เคสที่ 1: ตรวจสอบเรื่อง Case-Insensitive และขนาด Bounding Box (เวอร์ชันเสถียร ไม่พึ่งเว็บนอก)
 	test('1. ทดสอบการแสดงผลและตรวจจับปุ่มแบบ Case-Insensitive และยืดหยุ่นบน Safari', async ({ page }) => {
 		await page.setContent(`
-	  <html>
+		<html>
 		<body>
-		  <div style="padding: 20px;">
+			<div style="padding: 20px;">
 			<a href="#info" style="text-transform: uppercase; display: inline-block; padding: 10px;">
-			  More Information
+				More Information
 			</a>
-		  </div>
+			</div>
 		</body>
-	  </html>
+		</html>
 	`);
 		// ใช้ Regular Expression ค้นหาตัวอักษรโดยไม่สนพิมพ์เล็ก-พิมพ์ใหญ่
 		const moreInfoLink = page.getByRole('link', { name: /more information/i });

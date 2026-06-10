@@ -46,7 +46,6 @@ test('Color input must validate hex format, accessibility attributes, and live u
 	// Check if the initial value matches the required format.
 	await expect(page.locator(colorPickerSelector)).toHaveValue(/^#([0-9a-f]{6})$/i);
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Simulate interaction to ensure the color picker opens correctly.
@@ -62,7 +61,6 @@ test('Color input must validate hex format, accessibility attributes, and live u
 	}, sampleColor);
 	// Wait for the associated display element to update immediately upon 'blur' event or change in value.
 	await expect(page.locator(displaySelector)).toHaveText(`Color: ${sampleColor.toUpperCase()}`);
-
 
 	// --- 3. Common Use Case & Accessibility Tests ---
 

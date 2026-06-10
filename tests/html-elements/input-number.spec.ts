@@ -26,7 +26,6 @@ test('Number input must enforce boundaries (min/max) and handle step changes', a
 	await expect(page.locator(numberSelector)).toHaveAttribute('max');
 	await expect(page.locator(numberSelector)).toHaveAttribute('step');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Interacting with the input should activate native spinners/controls.
@@ -36,7 +35,6 @@ test('Number input must enforce boundaries (min/max) and handle step changes', a
 	// Test Blur on empty state: Losing focus with no value should be permissible (if not marked required).
 	await page.locator(numberSelector).clear();
 	await page.locator(numberSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Type) ---
 

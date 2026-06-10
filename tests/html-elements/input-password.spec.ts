@@ -33,7 +33,6 @@ test('Password input must enforce complexity, handle masking, and validate on bl
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(passwordSelector)).toHaveAttribute('autocomplete', 'current-password'); // Best practice attribute check
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Check that focus activates a visible password strength indicator/toggle.
@@ -44,7 +43,6 @@ test('Password input must enforce complexity, handle masking, and validate on bl
 	// Test Blur: Crucial for triggering immediate, client-side complexity checks (e.g., minimum length).
 	await page.fill(passwordSelector, 'short1!'); // Intentionally weak password
 	await page.locator(passwordSelector).dispatchEvent('blur');
-
 
 	// --- 3. Common Use Case Validation Tests (Complexity & Masking) ---
 

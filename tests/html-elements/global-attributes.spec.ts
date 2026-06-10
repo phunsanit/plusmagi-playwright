@@ -25,7 +25,6 @@ test('Form validation must correctly respect all global accessibility and metada
 	await expect(page.locator('#name')).toHaveAttribute('aria-required', 'true');
 	await expect(page.locator('#email-input')).toHaveAttribute('aria-describedby', '#email-help');
 
-
 	// --- 2. Attribute Consistency Check (Data vs ARIA) ---
 	// Test: สั่งเพิ่ม data attribute ลงใน element ผ่าน Browser Context
 	await page.evaluate(() => {
@@ -39,7 +38,6 @@ test('Form validation must correctly respect all global accessibility and metada
 
 	// ดึงตัวที่เพิ่งเซ็ตค่าไปมาตรวจเช็คความถูกต้อง
 	await expect(page.locator('#product-id')).toHaveAttribute('data-sku', 'SKU-987654');
-
 
 	// --- 3. Integration Test: Global Attribute Dependency Check ---
 	// จำลองสถานการณ์กรอกฟอร์มไม่ครบถ้วนแล้วกดส่ง

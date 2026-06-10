@@ -35,7 +35,6 @@ test('Radio input group must enforce mutual exclusivity, label association, and 
 		// We should also check that the input is correctly associated with its label via aria-labelledby/for.
 	}
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus Sequence: Moving focus programmatically through options.
@@ -45,7 +44,6 @@ test('Radio input group must enforce mutual exclusivity, label association, and 
 
 	// Test Blur from non-input element: If another element blurs, the selection state must be retained.
 	await page.click('.other-related-element'); // Simulate focus shift away from the group
-
 
 	// --- 3. Common Use Case Validation Tests (State & Exclusivity) ---
 

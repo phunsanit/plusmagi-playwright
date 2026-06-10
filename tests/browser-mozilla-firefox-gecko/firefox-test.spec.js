@@ -8,13 +8,13 @@ test.describe('Firefox Specific Features & Quirks', () => {
 				status: 200,
 				contentType: 'text/html',
 				body: `
-		  <html>
+			<html>
 			<body>
-			  <form id="profile-form">
+				<form id="profile-form">
 				<input type="text" id="nickname" value="" />
-			  </form>
+				</form>
 			</body>
-		  </html>
+			</html>
 		`
 			});
 		});
@@ -27,27 +27,27 @@ test.describe('Firefox Specific Features & Quirks', () => {
 	// เคสที่ 2: Strict Focus & Keyboard Events
 	test('2. ทดสอบความเข้มงวดเรื่อง Keyboard Focus บน Custom Component', async ({ page }) => {
 		await page.setContent(`
-	  <html>
+		<html>
 		<body>
-		  <div id="custom-select" tabindex="0" style="border:1px solid #ccc; padding:10px;">
+			<div id="custom-select" tabindex="0" style="border:1px solid #ccc; padding:10px;">
 			Select Option
-		  </div>
-		  <ul id="options-list" style="display:none;">
+			</div>
+			<ul id="options-list" style="display:none;">
 			<li id="opt-1">Option 1</li>
-		  </ul>
-		  <script>
+			</ul>
+			<script>
 			const select = document.getElementById('custom-select');
 			select.addEventListener('focus', () => {
-			  document.getElementById('options-list').style.display = 'block';
+				document.getElementById('options-list').style.display = 'block';
 			});
 			select.addEventListener('keydown', (e) => {
-			  if (e.key === 'ArrowDown') {
+				if (e.key === 'ArrowDown') {
 				document.getElementById('opt-1').style.color = 'red';
-			  }
+				}
 			});
-		  </script>
+			</script>
 		</body>
-	  </html>
+		</html>
 	`);
 		await page.keyboard.press('Tab');
 		await expect(page.locator('#options-list')).toBeVisible();

@@ -25,7 +25,6 @@ test('URL input must validate correct URI scheme and structure', async ({ page }
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(urlSelector)).toHaveAttribute('type', 'url');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Ensure focus triggers browser-level autocomplete suggestions if possible.
@@ -36,7 +35,6 @@ test('URL input must validate correct URI scheme and structure', async ({ page }
 	const badUrl = 'www.example'; // Missing scheme://
 	await page.fill(urlSelector, badUrl);
 	await page.locator(urlSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Protocols & Sanitization) ---
 

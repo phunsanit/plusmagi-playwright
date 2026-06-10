@@ -27,14 +27,12 @@ test('Button must execute specified JavaScript actions without interfering with 
 	// Test: Type Identification. The button MUST be identifiable as type="button" to prevent accidental submission.
 	await expect(page.locator(actionButtonSelector)).toHaveAttribute('type', 'button');
 
-
 	// --- 2. Event Validation Checks (JavaScript Interaction) ---
 
 	// Test: Execution of custom JS logic upon click.
 	await page.click(actionButtonSelector);
 	// Verify the specific, non-form related action happens.
 	await expect(page.locator(statusDisplaySelector)).toHaveText('Custom JavaScript executed successfully!');
-
 
 	// --- 3. Common Use Case Validation Tests (Submission Isolation) ---
 

@@ -25,7 +25,6 @@ test('Time input must validate HH:MM:SS format and handle picker interaction', a
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(timeSelector)).toHaveAttribute('type', 'time');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Must trigger the time picker widget overlay.
@@ -36,7 +35,6 @@ test('Time input must validate HH:MM:SS format and handle picker interaction', a
 	const sampleTime = '14:30:00'; // 2:30 PM
 	await page.fill(timeSelector, sampleTime);
 	await page.locator(timeSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Rollover) ---
 

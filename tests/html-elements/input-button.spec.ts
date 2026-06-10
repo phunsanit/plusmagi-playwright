@@ -39,7 +39,6 @@ test('Button element must function independently of form submission and validate
 	const focusedLocator = page.locator(`${buttonSelector}:focus`);
 	await expect(focusedLocator).toBeAttached();
 
-
 	// Test Blur: Simulate losing focus and ensure the associated element handles it gracefully.
 	// This tests if any JS event listeners are attached on blur.
 	await buttonElement.blur();

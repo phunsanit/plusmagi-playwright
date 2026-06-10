@@ -43,7 +43,6 @@ test('Email input must validate standard format, mandatory attributes, and event
 	await expect(page.locator(emailSelector)).toHaveAttribute('type', 'email');
 	// If a pattern attribute were present, we would test it here: await expect(page.locator(emailSelector)).toHaveAttribute('pattern', '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	await page.focus(emailSelector);
@@ -52,7 +51,6 @@ test('Email input must validate standard format, mandatory attributes, and event
 
 	// Simulate blur: This is critical for checking when browser/library validators fire.
 	await page.locator(emailSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Format & State) ---
 
@@ -67,7 +65,6 @@ test('Email input must validate standard format, mandatory attributes, and event
 	await page.locator(emailSelector).blur();
 	// Assert that the "required" error appears if no value is given and the field is marked required.
 	await expect(page.locator(errorSelector)).toContainText('Email Address is required.');
-
 
 	// Test C: Success path validation (Valid format)
 	const validEmail = 'user@example.com';

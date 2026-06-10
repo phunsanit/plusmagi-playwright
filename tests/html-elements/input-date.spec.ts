@@ -28,7 +28,6 @@ test('Date input must validate YYYY-MM-DD format, handle calendar interaction, a
 	// Test: Type check for mandatory attribute presence.
 	await expect(page.locator(dateSelector)).toHaveAttribute('type', 'date');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Check if focusing triggers the native/custom date picker UI overlay.
@@ -40,7 +39,6 @@ test('Date input must validate YYYY-MM-DD format, handle calendar interaction, a
 	await page.fill(dateSelector, initialDate);
 	await page.locator(dateSelector).blur();
 	await expect(page.locator(dateSelector)).toHaveValue(initialDate);
-
 
 	// --- 3. Common Use Case Validation Tests (Format & Impossibility) ---
 

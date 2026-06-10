@@ -28,7 +28,6 @@ test('Datetime-Local input must validate ISO format, handle picker interaction, 
 	// Test: Type check for mandatory attribute presence.
 	await expect(page.locator(dateTimeSelector)).toHaveAttribute('type', 'datetime-local');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Check if focusing triggers the comprehensive picker widget overlay.
@@ -40,7 +39,6 @@ test('Datetime-Local input must validate ISO format, handle picker interaction, 
 	await page.fill(dateTimeSelector, sampleDateTime);
 	await page.locator(dateTimeSelector).blur();
 	await expect(page.locator(dateTimeSelector)).toHaveValue(sampleDateTime);
-
 
 	// --- 3. Common Use Case Validation Tests (Format & Boundaries) ---
 

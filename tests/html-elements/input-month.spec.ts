@@ -24,7 +24,6 @@ test('Month input must validate YYYY-MM format and handle year boundary crossing
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(monthSelector)).toHaveAttribute('type', 'month');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Must trigger the appropriate combined Year/Month picker widget.
@@ -35,7 +34,6 @@ test('Month input must validate YYYY-MM format and handle year boundary crossing
 	const initialDate = '2024-11'; // YYYY-MM format for November 2024
 	await page.fill(monthSelector, initialDate);
 	await page.locator(monthSelector).blur();
-
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Format) ---
 

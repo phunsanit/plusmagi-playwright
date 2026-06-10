@@ -29,7 +29,6 @@ test('Checkbox input must manage state correctly, respect accessibility labels, 
 	await expect(page.locator(checkboxSelector)).toHaveAttribute('name', 'optional_optin');
 	await expect(page.locator(checkboxSelector)).toHaveAttribute('value', 'true'); // Value sent if checked
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Focus: Ensure focus is visually received.
@@ -39,7 +38,6 @@ test('Checkbox input must manage state correctly, respect accessibility labels, 
 	// Test Label Interaction: Simulating clicks on the associated label element.
 	await labelLocator.click(); // Click via label should toggle state
 	await expect(page.locator(checkboxSelector)).toBeChecked();
-
 
 	// --- 3. Common Use Case Validation Tests (State & Grouping) ---
 

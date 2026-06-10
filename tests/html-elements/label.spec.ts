@@ -56,7 +56,6 @@ test('Label must correctly associate and trigger focus on associated form contro
 	const emailLabelElement = page.locator('label', { hasText: 'Email Address' });
 	await expect(emailLabelElement).toHaveAttribute('for', 'email-input'); // Asserting structural link property.
 
-
 	// --- 2. Event Validation Checks (Accessibility Trigger) ---
 
 	// Test Interaction: Clicking the label must focus the associated input, regardless of visibility.
@@ -68,7 +67,6 @@ test('Label must correctly associate and trigger focus on associated form contro
 	const checkboxLabel = page.getByLabel('Optional Opt-in'); // Reusing selector from checkbox spec for testing
 	await checkboxLabel.click(); // Click via label should toggle state.
 	await expect(page.locator('#optin-checkbox')).toBeChecked();
-
 
 	// --- 3. Advanced Context Test: aria-labelledby (For complex labeling scenarios) ---
 

@@ -27,7 +27,6 @@ test('Reset button must clear ALL form inputs back to their initial state', asyn
 	// Test: Mandatory Type Attribute.
 	await expect(page.locator(resetSelector)).toHaveAttribute('type', 'reset');
 
-
 	// --- 2. Event Validation Checks (The Core Functionality) ---
 
 	// Test Setup: Populate multiple, diverse fields to ensure all are targeted for reset.

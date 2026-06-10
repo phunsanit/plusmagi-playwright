@@ -51,7 +51,6 @@ test('Data attributes must pass serialization data and integrate with global att
 	const actualHelp = await page.textContent('#name-help');
 	expect(actualHelp).toContain('SKU-987654');
 
-
 	// --- 3. Serialization Test: Ensuring complex objects are passed correctly and read by JS ---
 
 	const complexMetadata = JSON.stringify({ weight_kg: 1.2, dimensions: '10x20' });

@@ -26,7 +26,6 @@ test('Week input must correctly validate and handle YYYY-Www format', async ({ p
 	await expect(page.locator(`${containerSelector} label`)).toBeVisible();
 	await expect(page.locator(weekSelector)).toHaveAttribute('type', 'week');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 	// Test Focus: เคาะโฟกัสไปที่ Input
 	await page.focus(weekSelector);
@@ -34,7 +33,6 @@ test('Week input must correctly validate and handle YYYY-Www format', async ({ p
 	// หมายเหตุ: การตรวจ Screenshot ถ้ารันครั้งแรกระบบจะสร้างไฟล์ Master Image ไว้ให้ก่อน
 	// และถ้ารันครั้งถัดไปจะเปิดฟีเจอร์เปรียบเทียบรูปภาพ (Visual Regression) อัตโนมัติครับ
 	await expect(page).toHaveScreenshot('week_picker_focused.png');
-
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Format) ---
 

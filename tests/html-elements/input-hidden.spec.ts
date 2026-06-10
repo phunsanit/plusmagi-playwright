@@ -29,13 +29,11 @@ test('Hidden input must preserve state data without user interaction, confirming
 	await expect(page.locator(hiddenSelector)).toHaveAttribute('name', 'csrf_token');
 	await expect(page.locator(hiddenSelector)).toHaveAttribute('type', 'hidden');
 
-
 	// --- 2. Event Validation Checks (Focus & Blur) ---
 
 	// Test Interaction Isolation: The field should not be visible, and focus attempts should yield no visual change.
 	await page.focus(hiddenSelector); // Should happen silently or fail visually.
 	await expect(page.locator(hiddenSelector)).toBeHidden();
-
 
 	// --- 3. Common Use Case Validation Tests (Data Integrity) ---
 

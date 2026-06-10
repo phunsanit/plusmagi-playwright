@@ -27,7 +27,6 @@ test('Range slider must respect defined min, max, and step boundaries', async ({
 	await expect(page.locator(rangeSelector)).toHaveAttribute('max', '100'); // Assume max is set to 100.
 	await expect(page.locator(rangeSelector)).toHaveAttribute('step', '1');
 
-
 	// --- 2. Event Validation Checks (Interaction & State) ---
 
 	// Test Focus: Interacting with the slider knob/thumb should allow both drag and direct input.
@@ -39,7 +38,6 @@ test('Range slider must respect defined min, max, and step boundaries', async ({
 	const targetValue = '75';
 	await page.fill(rangeSelector, targetValue);
 	await expect(page.locator(rangeSelector)).toHaveValue(targetValue); // Assert direct fill works.
-
 
 	// --- 3. Common Use Case Validation Tests (Boundary & Increment) ---
 

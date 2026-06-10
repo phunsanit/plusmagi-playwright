@@ -2,18 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Safari WebKit Specific Features', () => {
 
-  // เคสที่ 1: ตรวจสอบเรื่อง Case-Insensitive และขนาด Bounding Box (เวอร์ชันเสถียร ไม่พึ่งเว็บนอก)
-  test('1. ทดสอบการแสดงผลและตรวจจับปุ่มแบบ Case-Insensitive และยืดหยุ่นบน Safari', async ({ page }) => {
+	// เคสที่ 1: ตรวจสอบเรื่อง Case-Insensitive และขนาด Bounding Box (เวอร์ชันเสถียร ไม่พึ่งเว็บนอก)
+	test('1. ทดสอบการแสดงผลและตรวจจับปุ่มแบบ Case-Insensitive และยืดหยุ่นบน Safari', async ({ page }) => {
 	await page.setContent(`
-	  <html>
+		<html>
 		<body>
-		  <div style="padding: 20px;">
+			<div style="padding: 20px;">
 			<a href="#info" style="text-transform: uppercase; display: inline-block; padding: 10px;">
-			  More Information
+				More Information
 			</a>
-		  </div>
+			</div>
 		</body>
-	  </html>
+		</html>
 	`);
 
 	// ใช้ Regular Expression ค้นหาตัวอักษรโดยไม่สนพิมพ์เล็ก-พิมพ์ใหญ่
@@ -24,10 +24,10 @@ test.describe('Safari WebKit Specific Features', () => {
 	const box = await moreInfoLink.boundingBox();
 	expect(box?.width).toBeGreaterThan(0);
 	expect(box?.height).toBeGreaterThan(0);
-  });
+	});
 
-  // เคสที่ 3: เก็บไว้เพราะเป็นพฤติกรรมเฉพาะทางของ WebKit Engine
-  test('2. ทดสอบมาตรฐานการแปลงรูปแบบวันที่ (Date Parsing) บน WebKit Engine', async ({ page }) => {
+	// เคสที่ 3: เก็บไว้เพราะเป็นพฤติกรรมเฉพาะทางของ WebKit Engine
+	test('2. ทดสอบมาตรฐานการแปลงรูปแบบวันที่ (Date Parsing) บน WebKit Engine', async ({ page }) => {
 	await page.setContent(`
 		<html>
 			<body>
@@ -51,6 +51,6 @@ test.describe('Safari WebKit Specific Features', () => {
 
 	const dateResult = page.locator('#date-output');
 	await expect(dateResult).toHaveText('Year: 2026');
-  });
+	});
 
 });
