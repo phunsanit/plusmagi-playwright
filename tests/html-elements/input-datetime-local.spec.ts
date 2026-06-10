@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/datetime-local
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML datetime-local input validation (type="datetime-local").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/datetime-local
  */
-test('Datetime-Local input must validate ISO format, handle picker interaction, and enforce accessibility', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="datetime-selector-wrapper">
 			<label for="datetime-picker">Appointment Date/Time</label>
 			<input type="datetime-local" id="datetime-picker" />
 		</div>
 	`);
+});
+
+test('Datetime-Local input must validate ISO format, handle picker interaction, and enforce accessibility', async ({ page }) => {
 	const dateTimeSelector = '#datetime-picker';
 	const containerSelector = '.datetime-selector-wrapper';
 

@@ -1,23 +1,25 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/reset
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML reset button validation (type="reset").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/reset
  */
-test('Reset button must clear ALL form inputs back to their initial state', async ({ page }) => {
-	await page.setContent(`
-		<form>
-			<input id="field-name" />
-			<select id="country-select">
-				<option value="">Select</option>
-				<option value="US">United States</option>
-			</select>
-			<input type="checkbox" id="optin-checkbox" />
-			<button type="reset">Reset</button>
-		</form>
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
+		<input id="field-name" />
+		<select id="country-select">
+			<option value="">Select</option>
+			<option value="US">United States</option>
+		</select>
+		<input type="checkbox" id="optin-checkbox" />
+		<button type="reset">Reset</button>
 	`);
+});
+
+test('Reset button must clear ALL form inputs back to their initial state', async ({ page }) => {
 	const resetSelector = 'button[type="reset"]';
 
 	// --- 1. Attribute Validation Checks (Structural) ---
@@ -51,8 +53,7 @@ test('Reset button must clear ALL form inputs back to their initial state', asyn
 	await expect(page.locator('#optin-checkbox')).not.toBeChecked(); // Must revert to unchecked state.
 
 	// Test C: Select Dropdown Reset Confirmation (Requires simulating a default/initial option if available).
-	const initialCountry = await page.selectOption('#country-select', 'US');
-	await expect(page.locator('#country-select')).toHaveValue('US'); // Must revert to its default selection.
+	await expect(page.locator('#country-select')).toHaveValue(''); // Must revert to its default selection ("").
 
 	// Test D: Isolation Check - Ensure unrelated, non-form elements are unaffected (out of scope for this specific test).
 });

@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/tel
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML phone number input validation (type="tel").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/tel
  */
-test('Telephone input must validate common national/international formats and accessibility', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="tel-selector-wrapper">
 			<label for="phone-input">Phone Number</label>
 			<input type="tel" id="phone-input" pattern="^\\+?[0-9\\(\\)\\-\\s]+$" />
 		</div>
 	`);
+});
+
+test('Telephone input must validate common national/international formats and accessibility', async ({ page }) => {
 	const telSelector = '#phone-input';
 	const containerSelector = '.tel-selector-wrapper';
 

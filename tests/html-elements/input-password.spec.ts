@@ -1,26 +1,29 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/password
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML password input validation (type="password").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/password
  */
-test('Password input must enforce complexity, handle masking, and validate on blur', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="password-container">
 			<label for="password-input">Password</label>
 			<input type="password" id="password-input" autocomplete="current-password" />
 			<div class="password-requirements-error"></div>
 		</div>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#password-input') as HTMLInputElement;
-		const error = document.querySelector('.password-requirements-error') as HTMLDivElement;
+	`, `
+		const input = document.querySelector('#password-input');
+		const error = document.querySelector('.password-requirements-error');
 		input.addEventListener('blur', () => {
 			error.textContent = (input.value && !/[A-Z]/.test(input.value)) ? 'Must contain an uppercase letter.' : '';
 		});
-	});
+	`);
+});
+
+test('Password input must enforce complexity, handle masking, and validate on blur', async ({ page }) => {
 	const passwordSelector = '#password-input';
 	const containerSelector = '.password-container';
 

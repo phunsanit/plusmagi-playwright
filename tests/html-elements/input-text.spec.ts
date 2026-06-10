@@ -1,24 +1,21 @@
-import { test, expect } from '@playwright/test';
-// 💡 อย่าลืม import inputSetup มาจากไฟล์โมดูลของคุณด้วยนะครับ เช่น:
-// import { inputSetup } from '../helpers/inputSetup';
+import { test, expect } from './shared-setup';
 
 const textSelector = '#username';
 const containerSelector = '.text-selector-wrapper';
 
-// ✅ 1. ย้าย beforeEach ออกมาด้านนอก เพื่อเตรียมพร้อมก่อนเริ่มทุกเทสในไฟล์นี้
-test.beforeEach(async ({ page }) => {
-	// ตรวจสอบให้แน่ใจว่าได้ทำการสร้างหรือ import inputSetup มาแล้ว
-	if (typeof inputSetup !== 'undefined') {
-		await inputSetup.setupContext(page);
-	} else {
-		// 🛠️ จำลองหน้าเว็บที่มีโครงสร้างแท็กตามที่คุณต้องการทดสอบขึ้นมาตรงๆ
-		await page.setContent(`
-			<div class="text-selector-wrapper">
-				<label for="username">Username:</label>
-				<input type="text" id="username" autocomplete="username" />
-			</div>
-		`);
-	}
+test.beforeEach(async ({ setupForm }) => {
+	// username input is inherently provided by setupForm, so we just wrap it with a label via DOM structure.
+	await setupForm(`
+		<div class="text-selector-wrapper">
+			<label for="username">Username:</label>
+		</div>
+	`, `
+		// Move the auto-generated username field into our wrapper for clean structure
+		const wrapper = document.querySelector('.text-selector-wrapper');
+		const usernameInput = document.getElementById('username');
+		usernameInput.autocomplete = 'username';
+		wrapper.appendChild(usernameInput);
+	`);
 });
 
 /**

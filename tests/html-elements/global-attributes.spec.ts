@@ -3,6 +3,8 @@ import { test, expect, Page } from '@playwright/test';
 // สร้างตัวแปรแชร์ระดับสวีท (Suite-level variable) เพื่อส่งต่อ page จาก beforeAll ไปยังเทสอื่นๆ
 let sharedPage: Page;
 
+import { globalSetup } from './shared-setup';
+
 test.beforeAll(async ({ browser }) => {
 	console.log("Setting up the master context fixture for all global attribute tests.");
 
@@ -10,39 +12,7 @@ test.beforeAll(async ({ browser }) => {
 	const context = await browser.newContext();
 	sharedPage = await context.newPage();
 
-	await sharedPage.setContent(`
-		<form id="my-form">
-			<input id="name" />
-			<div id="nameHelp"></div>
-			<input id="username" />
-			<input id="email-input" aria-describedby="#email-help" />
-			<div id="product-id"></div>
-			<button type="submit">Submit</button>
-			<div id="error-message" style="display:none">This name is required.</div>
-		</form>
-	`);
-	await sharedPage.evaluate(() => {
-		document.querySelector('#my-form')?.addEventListener('submit', (e) => {
-			e.preventDefault();
-			const nameEl = document.querySelector('#name') as HTMLInputElement;
-			if (!nameEl.value) {
-				(document.querySelector('#error-message') as HTMLElement).style.display = 'block';
-			}
-		});
-	});
-
-	// 1. ปรับปรุงการเซ็ตอัพ Element: เปลี่ยนจุดที่เคยใช้ `document` ผิดพลาด มาอยู่ภายใน evaluate
-	await sharedPage.locator('#username').click(); // Focus input (แก้ไขจาก getByLabel ซ้อน ID)
-
-	await sharedPage.evaluate(() => {
-		const nameEl = document.getElementById('name');
-		const nameHelpEl = document.getElementById('nameHelp');
-		if (nameEl) nameEl.setAttribute('aria-required', 'true');
-		if (nameHelpEl) nameHelpEl.textContent = 'This name is required.';
-	});
-
-	// 2. แก้ไขการใช้งาน .fill() ให้ถูกต้อง (ระบุ Selector ให้ชัดเจนตัวเดียว)
-	await sharedPage.locator('#email-input').fill('test@example.com');
+	await globalSetup.setupContext(sharedPage);
 });
 
 test('Form validation must correctly respect all global accessibility and metadata attributes', async () => {

@@ -1,18 +1,21 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/month
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML month input validation (type="month").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/month
  */
-test('Month input must validate YYYY-MM format and handle year boundary crossing', async ({ page }) => {
-	await page.setContent(`
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="month-selector-wrapper">
 			<label for="month-picker">Billing Month</label>
 			<input type="month" id="month-picker" />
 		</div>
 	`);
+});
+
+test('Month input must validate YYYY-MM format and handle year boundary crossing', async ({ page }) => {
 	const monthSelector = '#month-picker';
 	const containerSelector = '.month-selector-wrapper';
 

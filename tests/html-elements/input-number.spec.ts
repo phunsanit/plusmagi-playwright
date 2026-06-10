@@ -1,16 +1,21 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML number input validation (type="number").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/number
  */
-test('Number input must enforce boundaries (min/max) and handle step changes', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<input type="number" id="number-input" min="0" max="100" step="0.1" />
+	`, `
+		window.__STEP__ = 0.1;
 	`);
-	await page.evaluate(() => { (window as any).__STEP__ = 0.1; });
+});
+
+test('Number input must enforce boundaries (min/max) and handle step changes', async ({ page }) => {
 	const numberSelector = '#number-input';
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---

@@ -1,24 +1,18 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/week
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 const weekSelector = '#week-picker';
 const containerSelector = '.week-selector-wrapper';
 
-// ✅ 1. ย้าย beforeEach ออกมาด้านนอกระดับขอบเขตไฟล์ (File-level Scope)
-test.beforeEach(async ({ page }) => {
-	// ตรวจสอบระบบ Fixture เดิม หากยังไม่มีการประกาศ ให้สร้าง Mock DOM ขึ้นมาแทนการ page.goto
-	if (typeof inputSetup !== 'undefined') {
-		await inputSetup.setupContext(page);
-	} else {
-		// 🛠️ จำลองหน้าเว็บที่มีโครงสร้างแท็กตามที่คุณต้องการทดสอบขึ้นมาตรงๆ
-		await page.setContent(`
-			<div class="week-selector-wrapper">
-				<label for="week-picker">Select Week:</label>
-				<input type="week" id="week-picker" autocomplete="off" />
-			</div>
-		`);
-	}
+test.beforeEach(async ({ setupForm }) => {
+	// โยนแค่โครงสร้างที่ต้องการทดสอบเข้าไป โครงสร้างหลักและ setup จะถูกจัดการให้เอง
+	await setupForm(`
+		<div class="week-selector-wrapper">
+			<label for="week-picker">Select Week:</label>
+			<input type="week" id="week-picker" autocomplete="off" />
+		</div>
+	`);
 });
 
 /**

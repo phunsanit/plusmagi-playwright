@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/url
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML URL input validation (type=\"url\").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/url
  */
-test('URL input must validate correct URI scheme and structure', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="url-selector-wrapper">
 			<label for="website-url">Website URL</label>
 			<input type="url" id="website-url" />
 		</div>
 	`);
+});
+
+test('URL input must validate correct URI scheme and structure', async ({ page }) => {
 	const urlSelector = '#website-url';
 	const containerSelector = '.url-selector-wrapper';
 

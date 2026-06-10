@@ -1,28 +1,31 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/color
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML color input validation (type="color").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/color
  */
-test('Color input must validate hex format, accessibility attributes, and live updates', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="color-selector-wrapper">
 			<label for="color-picker">Choose Color</label>
 			<input type="color" id="color-picker" value="#000000" />
 			<div id="color-display">Color: #000000</div>
 		</div>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#color-picker') as HTMLInputElement;
-		const display = document.querySelector('#color-display') as HTMLDivElement;
+	`, `
+		const input = document.querySelector('#color-picker');
+		const display = document.querySelector('#color-display');
 		const updateDisplay = () => {
-			display.textContent = `Color: ${input.value.toUpperCase()}`;
+			display.textContent = \`Color: \${input.value.toUpperCase()}\`;
 		};
 		input.addEventListener('input', updateDisplay);
 		input.addEventListener('change', updateDisplay);
-	});
+	`);
+});
+
+test('Color input must validate hex format, accessibility attributes, and live updates', async ({ page }) => {
 	const colorPickerSelector = '#color-picker';
 	const displaySelector = '#color-display';
 	const containerSelector = '.color-selector-wrapper';

@@ -1,25 +1,26 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/hidden
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML hidden input validation (type="hidden").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/hidden
  */
-test('Hidden input must preserve state data without user interaction, confirming server contract adherence', async ({ page }) => {
-	await page.setContent(`
-		<form>
-			<input type="hidden" id="csrf-token" name="csrf_token" value="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6" />
-			<input id="visible-text-field" />
-			<button type="submit">Submit</button>
-		</form>
-	`);
-	await page.evaluate(() => {
-		document.querySelector('form')?.addEventListener('submit', (e) => {
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
+		<input type="hidden" id="csrf-token" name="csrf_token" value="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6" />
+		<input id="visible-text-field" />
+		<button type="submit">Submit</button>
+	`, `
+		document.querySelector('#master-form')?.addEventListener('submit', (e) => {
 			e.preventDefault();
 			window.location.hash = 'submission-success';
 		});
-	});
+	`);
+});
+
+test('Hidden input must preserve state data without user interaction, confirming server contract adherence', async ({ page }) => {
 	const hiddenSelector = '#csrf-token'; // Common use case: CSRF token or session ID
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---

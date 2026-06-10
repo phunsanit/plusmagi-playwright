@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/checkbox
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML checkbox validation (type="checkbox").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/checkbox
  */
-test('Checkbox input must manage state correctly, respect accessibility labels, and handle groups', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div>
 			<label>Optional Opt-in <input type="checkbox" id="optin-checkbox" name="optional_optin" value="true" /></label>
 			<label>Receive Newsletter <input type="checkbox" id="newsletter-checkbox" /></label>
 		</div>
 	`);
+});
+
+test('Checkbox input must manage state correctly, respect accessibility labels, and handle groups', async ({ page }) => {
 	const checkboxSelector = '#optin-checkbox';
 	const labelLocator = page.getByLabel('Optional Opt-in');
 

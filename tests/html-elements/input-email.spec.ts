@@ -1,22 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML email input validation (type=\"email\").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/email
  */
-test('Email input must validate standard format, mandatory attributes, and events', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="email-container">
 			<label id="email-label" for="email-input">Email Address</label>
 			<input type="email" id="email-input" required />
 			<div class="error-message"></div>
 		</div>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#email-input') as HTMLInputElement;
-		const error = document.querySelector('.error-message') as HTMLDivElement;
+	`, `
+		const input = document.querySelector('#email-input');
+		const error = document.querySelector('.error-message');
 		input.addEventListener('blur', () => {
 			if (!input.value) {
 				error.textContent = 'Email Address is required.';
@@ -26,7 +26,10 @@ test('Email input must validate standard format, mandatory attributes, and event
 				error.textContent = '';
 			}
 		});
-	});
+	`);
+});
+
+test('Email input must validate standard format, mandatory attributes, and events', async ({ page }) => {
 	const emailSelector = '#email-input';
 	const errorSelector = '.error-message';
 

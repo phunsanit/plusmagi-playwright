@@ -6,17 +6,42 @@ import { test, expect } from '@playwright/test';
  * Test Suite for HTML label element validation (type="label").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
  */
-test('Label must correctly associate and trigger focus on associated form controls', async ({ page }) => {
-	await page.setContent(`
-		<form>
-			<label>Username <input id="username" /></label>
-			<label for="email-input">Email Address</label>
-			<input id="email-input" />
+import { formSetup } from './shared-setup';
+
+test.beforeEach(async ({ page }) => {
+	// 1. เรียกใช้งาน Base Context จาก formSetup ก่อน
+	await formSetup.setupContext(page);
+
+	// 2. แทรก Elements และ Labels เฉพาะที่จำเป็นสำหรับเทสนี้เข้าไปในฟอร์มเดิม
+	await page.evaluate(() => {
+		const form = document.querySelector('form');
+		if (!form) return;
+
+		const usernameInput = document.getElementById('username');
+		if (usernameInput) {
+			const label = document.createElement('label');
+			label.textContent = 'Username ';
+			usernameInput.parentNode?.insertBefore(label, usernameInput);
+			label.appendChild(usernameInput); // นำ input ไปซ้อนใน label
+		}
+
+		const emailInput = document.getElementById('email-input');
+		if (emailInput) {
+			const emailLabel = document.createElement('label');
+			emailLabel.textContent = 'Email Address';
+			emailLabel.setAttribute('for', 'email-input');
+			emailInput.parentNode?.insertBefore(emailLabel, emailInput);
+		}
+
+		form.insertAdjacentHTML('beforeend', `
 			<input type="password" id="password-input" />
 			<label>Optional Opt-in <input type="checkbox" id="optin-checkbox" /></label>
 			<div role="textbox" aria-label="Full Name">Sample Text</div>
-		</form>
-	`);
+		`);
+	});
+});
+
+test('Label must correctly associate and trigger focus on associated form controls', async ({ page }) => {
 	// Setup: We assume a standard setup where fields are labeled, using both 'for' attribute and aria-labelledby.
 
 	const usernameLabel = page.getByLabel('Username'); // Standard use (implied association)

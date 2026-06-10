@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML date input validation (type="date").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
  */
-test('Date input must validate YYYY-MM-DD format, handle calendar interaction, and enforce accessibility', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="date-selector-wrapper">
 			<label for="date-picker">Select Date</label>
 			<input type="date" id="date-picker" />
 		</div>
 	`);
+});
+
+test('Date input must validate YYYY-MM-DD format, handle calendar interaction, and enforce accessibility', async ({ page }) => {
 	const dateSelector = '#date-picker';
 	const containerSelector = '.date-selector-wrapper';
 

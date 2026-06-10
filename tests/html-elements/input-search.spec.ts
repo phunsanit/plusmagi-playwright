@@ -1,24 +1,24 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML search input validation (type="search").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/search
  */
-test('Search input must handle autocomplete suggestions, clear state, and structured query parameters', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="search-container">
 			<label for="search-input">Search</label>
 			<input type="search" id="search-input" autocomplete="search" pattern=".+" />
 			<div class="autocomplete-suggestion" style="display: none;"></div>
-			<button id="clear-search" style="display: none;">Clear</button>
+			<button type="button" id="clear-search" style="display: none;">Clear</button>
 		</div>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#search-input') as HTMLInputElement;
-		const suggestion = document.querySelector('.autocomplete-suggestion') as HTMLDivElement;
-		const clearBtn = document.querySelector('#clear-search') as HTMLButtonElement;
+	`, `
+		const input = document.querySelector('#search-input');
+		const suggestion = document.querySelector('.autocomplete-suggestion');
+		const clearBtn = document.querySelector('#clear-search');
 
 		input.addEventListener('focus', () => suggestion.style.display = 'block');
 		input.addEventListener('blur', () => setTimeout(() => suggestion.style.display = 'none', 150));
@@ -30,13 +30,16 @@ test('Search input must handle autocomplete suggestions, clear state, and struct
 		});
 		suggestion.addEventListener('click', () => {
 			input.value = suggestion.textContent || '';
-			window.location.hash = `search/results?query=${encodeURIComponent(input.value)}`;
+			window.location.hash = \`search/results?query=\${encodeURIComponent(input.value)}\`;
 		});
 		clearBtn.addEventListener('click', () => {
 			input.value = '';
 			clearBtn.style.display = 'none';
 		});
-	});
+	`);
+});
+
+test('Search input must handle autocomplete suggestions, clear state, and structured query parameters', async ({ page }) => {
 	const searchSelector = '#search-input';
 	const suggestionSelector = '.autocomplete-suggestion';
 

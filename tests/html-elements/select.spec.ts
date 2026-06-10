@@ -1,13 +1,17 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML select element validation (type="select").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/select
  */
-test('Select dropdown must manage state correctly, respect options, and validate selection', async ({ page }) => {
-	await page.setContent(`
+
+const selectSelector = '#country-select';
+const containerSelector = '.select-wrapper';
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="select-wrapper">
 			<label for="country-select">Country</label>
 			<select id="country-select" name="country_code">
@@ -20,8 +24,9 @@ test('Select dropdown must manage state correctly, respect options, and validate
 		</div>
 		<select id="disabled-select" disabled></select>
 	`);
-	const selectSelector = '#country-select';
-	const containerSelector = '.select-wrapper';
+});
+
+test('Select dropdown must manage state correctly, respect options, and validate selection', async ({ page }) => {
 
 	// --- 1. Attribute Validation Checks (Required Attributes) ---
 

@@ -1,25 +1,27 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form
 
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
 /**
  * Test Suite for the <form> element structure and overall submission pipeline.
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/form
  */
-test('Form container must validate structural attributes, method flow, and required grouping', async ({ page }) => {
-	const targetUrl = 'http://localhost/form-test';
-	await page.route(targetUrl, route => {
-		route.fulfill({
-			status: 200,
-			contentType: 'text/html',
-			body: '<form action="/submit-success"><input type="text" name="fname"><input type="text" name="lname"><button type="submit">Submit</button></form>'
-		});
-	});
-	await page.route('**/submit-success*', route => route.fulfill({ status: 200, body: 'Success' }));
-	await page.goto(targetUrl);
+import { formSetup } from './shared-setup';
 
-	// ค้นหา Form แรกบนหน้าเว็บ
-	const form = page.locator('form').first();
+const targetUrl = 'http://localhost/form-test';
+
+test.beforeEach(async ({ page }) => {
+	await formSetup.setupContext(page);
+	await page.evaluate(() => {
+		// Insert the specific form into the body to run our test
+		document.body.insertAdjacentHTML('beforeend', '<form action="http://localhost/submit-success"><input type="text" name="fname"><input type="text" name="lname"><button type="submit">Submit</button></form>');
+	});
+});
+
+test('Form container must validate structural attributes, method flow, and required grouping', async ({ page }) => {
+
+	// ค้นหา Form ล่าสุดบนหน้าเว็บ (ฟอร์มที่ทดสอบถูกแทรกเข้าไปท้ายสุด)
+	const form = page.locator('form').last();
 	await expect(form).toBeVisible();
 
 	// --- 1. Attribute Validation Checks ---
@@ -45,13 +47,7 @@ test('Form container must validate structural attributes, method flow, and requi
 	// ค้นหาปุ่ม Submit ภายในฟอร์ม และสั่งคลิก
 	const submitBtn = form.locator('input[type="submit"], button[type="submit"]').first();
 	if (await submitBtn.count() > 0) {
-		// ดัก Event รอหน้าโหลดเสร็จหลังจากกด Submit (เพราะปกติกดแล้วฟอร์มจะต้องส่งค่าเปลี่ยนหน้า)
-		await Promise.all([
-			page.waitForNavigation({ url: /.*/, waitUntil: 'load' }).catch(() => {}), // รอรับ URL ใหม่
-			submitBtn.click({ force: true })
-		]);
-
-		// ทดสอบว่าหน้าเว็บได้มีการส่งข้อมูลและเปลี่ยนหน้า URL จริง
-		expect(page.url()).not.toBe(targetUrl);
+		await submitBtn.click();
+		await expect(page).toHaveURL(/.*submit-success.*/);
 	}
 });

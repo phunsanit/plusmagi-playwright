@@ -1,20 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML radio button validation (type="radio").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/radio
  */
-test('Radio input group must enforce mutual exclusivity, label association, and state transitions', async ({ page }) => {
-	await page.setContent(`
-		<form>
-			<label>Option A <input type="radio" id="optionA" name="user_preference" /></label>
-			<label>Option B <input type="radio" id="optionB" name="user_preference" /></label>
-			<label>Option C <input type="radio" id="optionC" name="user_preference" /></label>
-			<button type="button" class="other-related-element">Other Element</button>
-		</form>
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
+		<label>Option A <input type="radio" id="optionA" name="user_preference" /></label>
+		<label>Option B <input type="radio" id="optionB" name="user_preference" /></label>
+		<label>Option C <input type="radio" id="optionC" name="user_preference" /></label>
+		<button type="button" class="other-related-element">Other Element</button>
 	`);
+});
+
+test('Radio input group must enforce mutual exclusivity, label association, and state transitions', async ({ page }) => {
 	const options = [
 		{ id: '#optionA', label: 'Option A' },
 		{ id: '#optionB', label: 'Option B' },

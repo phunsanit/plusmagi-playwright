@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/time
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML time input validation (type="time").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/time
  */
-test('Time input must validate HH:MM:SS format and handle picker interaction', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="time-selector-wrapper">
 			<label for="appointment-time">Select Time</label>
 			<input type="time" id="appointment-time" />
 		</div>
 	`);
+});
+
+test('Time input must validate HH:MM:SS format and handle picker interaction', async ({ page }) => {
 	const timeSelector = '#appointment-time';
 	const containerSelector = '.time-selector-wrapper';
 

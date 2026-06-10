@@ -1,33 +1,32 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML file input validation (type="file").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
  */
-test('File input must handle local selection, MIME type restrictions, and multi-select scenarios', async ({ page }) => {
-	await page.setContent(`
-		<form>
-			<label aria-label="Upload Document">Upload Document
-				<input type="file" id="file-upload" accept="\\.(pdf|jpg|jpeg)$" multiple />
-			</label>
-			<button type="submit">Submit</button>
-		</form>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#file-upload') as HTMLInputElement;
-		input.addEventListener('change', () => {
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
+		<label aria-label="Upload Document">Upload Document
+			<input type="file" id="file-upload" accept="\\.(pdf|jpg|jpeg)$" multiple />
+		</label>
+		<button type="submit">Submit</button>
+	`, `
+		const input = document.querySelector('#file-upload');
+		input?.addEventListener('change', () => {
 			if (input.files && input.files.length > 0 && input.files[0].name.endsWith('.txt'))
 				input.value = ''; // Simulate client-side rejection
 		});
-	});
-	await page.evaluate(() => {
-		document.querySelector('form')?.addEventListener('submit', (e) => {
+		document.querySelector('#master-form')?.addEventListener('submit', (e) => {
 			e.preventDefault();
 			window.location.hash = 'processing';
 		});
-	});
+	`);
+});
+
+test('File input must handle local selection, MIME type restrictions, and multi-select scenarios', async ({ page }) => {
 	const fileInputSelector = '#file-upload';
 	const uploadButtonSelector = 'button[type="submit"]';
 

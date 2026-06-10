@@ -1,18 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML range input validation (type="range").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/range
  */
-test('Range slider must respect defined min, max, and step boundaries', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="range-selector-wrapper">
 			<label for="satisfaction-slider">Satisfaction</label>
 			<input type="range" id="satisfaction-slider" min="0" max="100" step="1" />
 		</div>
 	`);
+});
+
+test('Range slider must respect defined min, max, and step boundaries', async ({ page }) => {
 	const rangeSelector = '#satisfaction-slider';
 	const containerSelector = '.range-selector-wrapper';
 

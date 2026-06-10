@@ -1,22 +1,22 @@
 //https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/image
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from './shared-setup';
 
 /**
  * Test Suite for HTML image input validation (type="image").
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/image
  */
-test('Image input must restrict file types via MIME acceptance and simulate preview verification', async ({ page }) => {
-	await page.setContent(`
+
+test.beforeEach(async ({ setupForm }) => {
+	await setupForm(`
 		<div class="image-selector-wrapper">
 			<label aria-label="Profile Picture">Profile Picture
 				<input type="file" id="profile-picture-upload" accept="\\.(jpg|jpeg|png|webp)$" />
 			</label>
 			<div id="preview-display"></div>
 		</div>
-	`);
-	await page.evaluate(() => {
-		const input = document.querySelector('#profile-picture-upload') as HTMLInputElement;
+	`, `
+		const input = document.querySelector('#profile-picture-upload');
 		input.addEventListener('change', () => {
 			if (input.files && input.files.length > 0 && input.files[0].name.endsWith('.pdf')) {
 				input.value = ''; // Simulate browser blocking invalid file types
@@ -24,7 +24,10 @@ test('Image input must restrict file types via MIME acceptance and simulate prev
 			}
 			document.querySelector('#preview-display')?.setAttribute('data-ratio', '16:9');
 		});
-	});
+	`);
+});
+
+test('Image input must restrict file types via MIME acceptance and simulate preview verification', async ({ page }) => {
 	const imageSelector = '#profile-picture-upload';
 	const containerSelector = '.image-selector-wrapper';
 

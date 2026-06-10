@@ -7,19 +7,27 @@ import { test, expect } from '@playwright/test';
  * This tests how ancillary metadata is passed between front-end components and backend handlers.
  * MDN Reference URL Context: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/data#data-\*attributes
 
- * NOTE: Validation relies heavily on global context attributes (see global-attributes.spec.ts) to ensure data-* values are read correctly by JS.*
+ * NOTE: Validation relies heavily on global context attributes to ensure data-* values are read correctly by JS.*
  */
+import { formSetup } from './shared-setup';
+
+const productSelector = '#main-product-card';
+const skuAttributeSelector = '[data-sku]';
+
+test.beforeEach(async ({ page }) => {
+	await formSetup.setupContext(page);
+	await page.evaluate(() => {
+		document.body.insertAdjacentHTML('beforeend', `
+			<div id="main-product-card" data-product-id="PROD-001">
+				<span data-sku="SKU-987654"></span>
+			</div>
+			<div id="username-help"></div>
+			<div id="name-help"></div>
+		`);
+	});
+});
+
 test('Data attributes must pass serialization data and integrate with global attribute checks', async ({ page }) => {
-	await page.setContent(`
-		<div id="main-product-card" data-product-id="PROD-001">
-			<span data-sku="SKU-987654"></span>
-		</div>
-		<input id="username" />
-		<div id="username-help"></div>
-		<div id="name-help"></div>
-	`);
-	const productSelector = '#main-product-card';
-	const skuAttributeSelector = '[data-sku]';
 
 	// --- 1. Structural Validation: Attribute Existence ---
 

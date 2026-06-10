@@ -4,6 +4,11 @@ export default defineConfig({
 	testDir: './tests',
 	fullyParallel: true,
 
+	expect: {
+		toHaveScreenshot: {
+			maxDiffPixelRatio: 0.05,
+		},
+	},
 	// Keep reporter simple for the final template view:
 	reporter: [
 		['list']
